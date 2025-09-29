@@ -1,1 +1,32 @@
 # Code-Alpha
+ from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+
+# FAQs
+faq_questions = [
+    "What is your return policy?",
+    "Do you offer free shipping?",
+    "How can I contact support?"
+]
+faq_answers = [
+    "You can return within 30 days of purchase.",
+    "Yes, we offer free shipping on orders above $50.",
+    "You can email support@example.com."
+]
+
+# Vectorizer
+vectorizer = TfidfVectorizer()
+faq_vectors = vectorizer.fit_transform(faq_questions)
+
+def chatbot_response(user_input):
+    user_vec = vectorizer.transform([user_input])
+    similarity = cosine_similarity(user_vec, faq_vectors)
+    index = similarity.argmax()
+    return faq_answers[index]
+
+# Test
+while True:
+    query = input("You: ")
+    if query.lower() in ["exit", "quit"]:
+        break
+    print("Bot:", chatbot_response(query))
